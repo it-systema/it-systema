@@ -1,0 +1,122 @@
+#-----------------------------------------------------------------------------------------------------------------------
+# Rgc budgeting user
+#-----------------------------------------------------------------------------------------------------------------------
+rgc:
+  budgeting:
+    userName: "svc.po.test.acc"
+    userPassword: "ebw!!%95p5&rSbht"
+    domainHostName:
+    domain: "ent.ukrgas.com.ua"
+    #-----------------------------------------------------------------------------------------------------------------------
+    # ldap
+    #-----------------------------------------------------------------------------------------------------------------------
+    ldapUrl: "ldap://ent.ukrgas.com.ua:3268"
+    ldapBaseDn: "dc=ent,dc=ukrgas,dc=com,dc=ua"
+    ldapUserName: ${rgc.budgeting.userName}
+    ldapUserPassword: ${rgc.budgeting.userPassword}
+    #-----------------------------------------------------------------------------------------------------------------------
+    # Ldap properties
+    #-----------------------------------------------------------------------------------------------------------------------
+    ldap:
+      groupSearchFilter: "(&(member={0}))"
+      userDnPattern: "uid={0},ou=user"
+      userSearchFilter: "sAMAccountName={0}"
+    #-----------------------------------------------------------------------------------------------------------------------
+    # Jwt properties
+    #-----------------------------------------------------------------------------------------------------------------------
+    jwtSecret: "#rGc$Secret&Key!"
+    # 5 min = 300000 ms
+    jwtExpirationMs: 300000
+    #30 min = 1800000 ms
+    jwtRefreshExpirationMs: 1800000
+    #-----------------------------------------------------------------------------------------------------------------------
+    # RGC budgeting general settings
+    #-----------------------------------------------------------------------------------------------------------------------
+    dateTimeFormat: "yyyy-MM-dd'T'HH:mm:ss[.S][.SS][.SSS][.SSSS]"
+    rootFilePath: "d:/work/attachments/"
+    fileHashAlgorithm: MD5
+    #-----------------------------------------------------------------------------------------------------------------------
+    # Hazelcast
+    #-----------------------------------------------------------------------------------------------------------------------
+    hazelcast:
+      instanceName: "rgc.budgeting.instance"
+#-----------------------------------------------------------------------------------------------------------------------
+# database connection
+#-----------------------------------------------------------------------------------------------------------------------
+spring:
+  datasource:
+    driverClassName: "org.postgresql.Driver"
+    url: "jdbc:postgresql://localhost:5432/budgeting-dev"
+    #driverClassName: "com.microsoft.sqlserver.jdbc.SQLServerDriver"
+    #url: "jdbc:sqlserver://localhost;database=RgcBudgetingDatabase;trustServerCertificate=true;"
+    #username: ${rgc.budgeting.userName}
+    #password: ${rgc.budgeting.userPassword}
+    username: budgeting-dev
+    password: budgeting-dev
+
+  #-----------------------------------------------------------------------------------------------------------------------
+  # JPA / HIBERNATE
+  #-----------------------------------------------------------------------------------------------------------------------
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+    properties:
+      hibernate:
+        dialect: "org.hibernate.dialect.PostgreSQLDialect"
+        #current_session_context_class: "org.springframework.orm.hibernate5.SpringSessionContext"
+        show_sql: true
+        use_sql_comments: true
+        format_sql: true
+      org:
+        hibernate:
+          flushMode: COMMIT
+  #----------------------------------------------------------------------------------------------------------------------
+  # Spring data
+  #-----------------------------------------------------------------------------------------------------------------------
+  data:
+    jpa:
+      repositories:
+        enabled: false
+    ldap:
+      repositories:
+        enabled: false
+  #----------------------------------------------------------------------------------------------------------------------
+  # Jackson
+  #-----------------------------------------------------------------------------------------------------------------------
+  jackson:
+    serialization-inclusion: non_null
+
+#-----------------------------------------------------------------------------------------------------------------------
+# HIBERNATE Connection
+#-----------------------------------------------------------------------------------------------------------------------
+hibernate:
+  connection:
+#    provider_class: "org.hibernate.connection.C3P0ConnectionProvider"
+    provider_class: "com.zaxxer.hikari.hibernate.HikariConnectionProvider"
+    min_pool_size: 5
+    max_pool_size: 25
+#-----------------------------------------------------------------------------------------------------------------------
+# logging
+#-----------------------------------------------------------------------------------------------------------------------
+logging:
+  level:
+    root: info
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type: info
+    com:
+      zaxxer:
+        hikari:
+          HikariConfig: info
+          hikari: TRACE
+#-----------------------------------------------------------------------------------------------------------------------
+# other
+#-----------------------------------------------------------------------------------------------------------------------
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /api-docs/swagger-ui-custom.html

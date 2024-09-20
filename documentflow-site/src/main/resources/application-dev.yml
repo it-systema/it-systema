@@ -1,0 +1,185 @@
+#-----------------------------------------------------------------------------------------------------------------------
+# Service user user
+#-----------------------------------------------------------------------------------------------------------------------
+#serviceUser: "svc.po.test.acc"
+#serviceUserPassword: "ebw!!%95p5&rSbht"
+#serviceDomain: "ent.ukrgas.com.ua"
+#serviceDomainHostName:
+#CN=Брік Артем Сергійович,OU=Users,OU=Vinnytsia,OU=GasDistributionNetwork,DC=naftogaz,DC=com
+
+serviceUser: "grmu-vn-svc.test"
+serviceUserPassword: "1234QWEqwe"
+#serviceDomain: "naftogaz.grmu.com.ua"
+serviceDomain: "naftogaz.com"
+serviceDomainHostName: ""
+
+leftyab:
+  #actionhandler:
+    #is-enabled: true
+    #packages: ["com.leftyab.*", "com.leftyab.crm.*", "com.leftyab.crm.customers"]
+  devProfile: true
+  applicationName: "mainapplication"
+  moduleEnabled: true
+  beanProvider: "spring-bean-provider"
+  springEnabled: true
+  security:
+    #-----------------------------------------------------------------------------------------------------------------------
+    # ldap properties
+    #-----------------------------------------------------------------------------------------------------------------------
+    ldapEnabled: true
+    ldap:
+#  dnsHostName	"GRMU-VN-S-RODC.naftogaz.com"	string
+#	BasePath	"LDAP://10.117.8.32/CN=Users,DC=naftogaz,DC=com"	string
+#	ContextBasePartitionDN	"DC=naftogaz,DC=com"	string
+#	DefaultNamingContext	"DC=naftogaz,DC=com"	string
+#	Path	"LDAP://10.117.8.32/CN=Брік Артем Сергійович,OU=Users,OU=Vinnytsia,OU=GasDistributionNetwork,DC=naftogaz,DC=com"	string
+#   ldapBaseDn: "dc=naftogaz,dc=grmu,dc=com,dc=ua"
+#   /OU=GasDistributionNetwork,DC=naftogaz,DC=com
+#      ldapUrl: "ldap://10.117.8.32:3268"
+      ldapUrl: "ldap://10.117.8.32:389"
+#      ldapUrl: "ldap://10.117.8.32"
+      ldapBaseDn: "dc=naftogaz,dc=com"
+      ldapUserName: ${serviceUser}
+      ldapUserPassword: ${serviceUserPassword}
+      # "ou=groups"
+      groupSearchFilter: "(&(member={0}))"
+      userDnPattern: "uid={0},ou=user"
+      # "(&(objectClass=user)(sAMAccountName={0}))"
+      # "(&(objectClass=user)(userPrincipalName={0}))"
+      # "sAMAccountName={0}"
+      userSearchFilter: "(&(objectClass=user)(sAMAccountName={0}))"
+    #-----------------------------------------------------------------------------------------------------------------------
+    # Jwt properties
+    #-----------------------------------------------------------------------------------------------------------------------
+    jwtEnabled: true
+    jwt:
+      jwtSecret: "#Jwt$Secret&Key!"
+      # 5 min = 300000 ms
+      jwtExpirationMs: 300000
+      # 30 min = 1800000 ms
+      # 24 h = 86400000 ms
+      jwtRefreshExpirationMs: 86400000 #1800000
+
+    #-----------------------------------------------------------------------------------------------------------------------
+    # Service general settings
+    #-----------------------------------------------------------------------------------------------------------------------
+    dateTimeFormat: "yyyy-MM-dd'T'HH:mm:ss[.S][.SS][.SSS][.SSSS]"
+    rootFilePath: "d:/work/attachments/"
+    fileHashAlgorithm: MD5
+  documentFlow:
+    enabled: true
+    defaultHandlerProvider: true
+
+camel:
+  main:
+    auto-startup: true
+    autowired-enabled: true
+
+
+  dataformat:
+    jackson:
+      enabled=true:
+#-----------------------------------------------------------------------------------------------------------------------
+# database connection
+#-----------------------------------------------------------------------------------------------------------------------
+
+spring:
+
+  datasource:
+    driverClassName: "org.postgresql.Driver"
+    #url: "jdbc:postgresql://localhost:5432/budgeting-dev"
+    url: "jdbc:postgresql://localhost:5432/documentflow-dev"
+    #    driverClassName: "com.microsoft.sqlserver.jdbc.SQLServerDriver"
+    #    url: "jdbc:sqlserver://localhost;database=RgcBudgetingDatabase;trustServerCertificate=true;"
+    #username: ${rgc.budgeting.userName}
+    #password: ${rgc.budgeting.userPassword}
+    username: "user-dev"
+    password: "user-dev"
+    hikari:
+      connection-timeout: 20000
+      minimum-idle: 10
+      maximum-pool-size: 10
+      idle-timeout: 10000
+      max-lifetime: 1000
+      auto-commit: true
+  flyway:
+    enabled: false
+    user: "user-migrations"
+    password: "user-migrations"
+    schemas: "public"
+    url: "jdbc:postgresql://localhost:5432/documentflow-dev"
+    baseline-on-migrate: true
+  #-----------------------------------------------------------------------------------------------------------------------
+  # JPA / HIBERNATE
+  #-----------------------------------------------------------------------------------------------------------------------
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+    open-in-view: false
+    generate-ddl: false
+    #database: postgresql
+
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+    properties:
+
+      hibernate:
+        #dialect: "org.hibernate.dialect.PostgreSQLDialect"
+        #current_session_context_class: "org.springframework.orm.hibernate5.SpringSessionContext"
+        show_sql: true
+        use_sql_comments: true
+        format_sql: true
+      org:
+        hibernate:
+
+          flushMode: COMMIT
+
+
+  #----------------------------------------------------------------------------------------------------------------------
+  # Spring data
+  #-----------------------------------------------------------------------------------------------------------------------
+  #data:
+  #  jpa:
+  #    repositories:
+  #      enabled: false
+  #  ldap:
+  #    repositories:
+  #      enabled: false
+  #----------------------------------------------------------------------------------------------------------------------
+  # Jackson
+  #-----------------------------------------------------------------------------------------------------------------------
+  jackson:
+    serialization-inclusion: non_null
+
+#-----------------------------------------------------------------------------------------------------------------------
+# HIBERNATE Connection
+#-----------------------------------------------------------------------------------------------------------------------
+hibernate:
+#  connection:
+#    provider_class: "com.zaxxer.hikari.hibernate.HikariConnectionProvider"
+#    min_pool_size: 3
+#    max_pool_size: 100
+#-----------------------------------------------------------------------------------------------------------------------
+# logging
+#-----------------------------------------------------------------------------------------------------------------------
+logging:
+  level:
+    root: info
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type: info
+    com:
+      zaxxer:
+        hikari:
+          HikariConfig: debug
+          hikari: debug
+#-----------------------------------------------------------------------------------------------------------------------
+# other
+#-----------------------------------------------------------------------------------------------------------------------
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /api-docs/swagger-ui-custom.html

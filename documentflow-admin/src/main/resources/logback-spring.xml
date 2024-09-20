@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <appender name="json" class="ch.qos.logback.core.ConsoleAppender">
+    <!--        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">-->
+<!--
+    <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+      <providers>
+        <timestamp>
+          <fieldName>timestamp</fieldName>
+        </timestamp>
+        <logLevel>
+          <fieldName>level</fieldName>
+        </logLevel>
+        <loggerName>
+          <fieldName>logger</fieldName>
+        </loggerName>
+        <threadName>
+          <fieldName>thread</fieldName>
+        </threadName>
+        <message>
+          <fieldName>message</fieldName>
+        </message>
+        <pattern>
+          <pattern>
+            {
+            "jsonMessage": "#asJson{%message}"
+            }
+          </pattern>
+        </pattern>
+      </providers>
+    </encoder>
+-->
+    <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+    </encoder>
+    <!--    <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">-->
+    <!--    <providers>-->
+    <!--      <timestamp/>-->
+    <!--      <version/>-->
+    <!--      <loggerName/>-->
+    <!--      <pattern>-->
+    <!--        <pattern>-->
+    <!--          {-->
+    <!--          "message": "#asJson{%message}"-->
+    <!--          }-->
+    <!--        </pattern>-->
+    <!--      </pattern>-->
+    <!--    </providers>-->
+    <!--  </encoder>-->
+
+  </appender>
+
+  <root level="info">
+    <appender-ref ref="json" />
+  </root>
+</configuration>
